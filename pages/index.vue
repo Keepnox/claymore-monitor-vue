@@ -4,31 +4,35 @@
     div.col-md-12(v-if="rigs")
       div.row
         div.col-md-12.current-info-outer
-          div.current-info-inner
-            div.col-md-4
-              div.row
-                div.col-md-12 TOPLAM HASH
-                div.col-md-12
-                  h2 {{totalEthVal}}
-                div.col-md-12
-                  canvas#gauge
-      div.row
-        div.col-md-3.rig-info-outer(v-for="(rig, index) in rigs")
+          div.current-info-inner.row
+            div.col-md-4.mhs-text
+              div.text
+                span {{totalEthVal}}
+                span.mhs m/HS
+            div.col-md-4(style="text-align: center;")
+              GaugeHash(:gaugeMhsSetter="totalEthVal || 0")
+            div.col-md-4.online-pc
+              div.text
+                span 45
+                span /
+                span 45
+      div.row.rig-render
+        div.col-md-4.rig-info-outer(:class="checkClass(rigs[index].eth)" v-for="(rig, index) in rigs")
           div.controller(v-if="!rig") YUKLENIYOR
           div.rig-info-inner(v-if="rig")
             div.row
-              div.col-md-2
+              div.col-md-3.rig-ip
                 a(:href="`http://${rig.host}`" target="_blank")
-                  strong {{rig.name}}
-              div.col-md-2.eth-stat(v-if="rig.eth === NaN" :class="checkClass(rigs[index].eth)" ) ANNEN
-              div.col-md-2.eth-stat(v-if="rigs[index].eth !== NaN" :class="checkClass(rigs[index].eth)" ) {{rig.eth | hash}}
+                   strong {{rig.name}}
+              div.col-md-3.eth-stat(v-if="rig.eth === NaN" ) ANNEN
+              div.col-md-3.eth-stat(v-if="rigs[index].eth !== NaN" :class="checkClass(rigs[index].eth)" ) {{rig.eth | hash}}
               div.col-md-2 {{rig.temps | temp}}'C
               div.col-md-3 {{rig.temps | fanSpeed}} %
 
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
+import GaugeHash from '~/components/GaugeHash.vue'
 import axios from'axios'
 
 export default {
@@ -36,22 +40,7 @@ export default {
     return {
       loadedData: false,
       gauge: '',
-      rigs: [{
-        comments:"ASUS 7950",
-        dcr:"0;0;0",
-        dcr_hr:"off;off;off;off;off;off",
-        error:null,
-        eth:"180735;3312;0",
-        eth_hr:"30422;30801;30529;29811;29359;29810",
-        host:"192.168.1.107:3333",
-        name:"R1P07",
-        offline:false,
-        pools:"coinotron.com:3344",
-        temps:"57;67;59;67;53;67;56;67;58;67;58;67",
-        ti:null,
-        uptime:"test",
-        ver:"11.5 - ETH",
-      }],
+      rigs: [],
       totalEthVal: ""
     }
   },
@@ -101,7 +90,13 @@ export default {
     }
   },
   components: {
-    Logo
+    GaugeHash
+  },
+  mounted: function () {
+    var getHeaderHEIGHT = document.querySelector('.current-info-outer').offsetHeight
+    console.log(getHeaderHEIGHT)
+    console.log('selam')
+    document.querySelector('.rig-render').style.marginTop = (getHeaderHEIGHT + 25 ) + 'px'
   },
   methods: {
     totalEth: function () {
@@ -125,9 +120,9 @@ export default {
     checkClass: function (eth) {
       var ethPretty = eth.split(';')[0];
       // console.log(eth)
-      if(ethPretty > 165000) {
+      if(ethPretty > 170000) {
         return 'excellent';
-      } else if (ethPretty < 165000 && ethPretty > 155000) {
+      } else if (ethPretty < 170000 && ethPretty > 155000) {
         return 'good';
       } else {
         return 'bad';
@@ -144,61 +139,6 @@ export default {
         })
       },3000)
     },
-    gaugeAddOn: function () {
-      var opts = {
-        angle: 0,
-        lineWidth: 0.14,
-        radiusScale: 1,
-        pointer: {
-          length: 0.6,
-          strokeWidth: 0.035,
-          color: '#000000'
-        },
-        staticZones: [
-           {strokeStyle: "#de4c58", min: 0, max: 3000},
-           {strokeStyle: "#f6c24b", min: 3000, max: 7000},
-           {strokeStyle: "#8dc95b", min: 7000, max: 8000},
-        ],
-        staticLabels: {
-          font: "10px sans-serif",
-          labels: [0, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000],
-          color: "#000000",
-          fractionDigits: 0
-        },
-        limitMax: false,
-        limitMin: false,
-        colorStart: '#6FADCF',
-        colorStop: '#8FC0DA',
-        strokeColor: '#E0E0E0',
-        generateGradient: true,
-        highDpiSupport: true,
-      };
-      var target = document.getElementById('gauge');
-      this.gauge = new Gauge(target).setOptions(opts);
-      this.gauge.maxValue = 8000;
-      this.gauge.setMinValue(0);
-      this.gauge.animationSpeed = 32;
-      this.gauge.set(this.totalEthVal);
-
-    }
-  },
-  watch: {
-    totalEthVal: function (val) {
-      if(this.loadedData) {
-        var self = this;
-        setTimeout(function () {
-          self.gauge.set(val)
-        }, 500)
-      }
-    }
-  },
-  mounted: function () {
-    var self = this;
-    setTimeout(function () {
-      if (document && self.loadedData == true) {
-        self.gaugeAddOn();
-      }
-    }, 5000)
   },
   created: function () {
     this.intervalRequest();
@@ -209,23 +149,56 @@ export default {
 <style lang="sass">
 body
   background-color: #e5e4e8
+.rig-ip
+  a
+    color: black
+    transition: .3s all;
+    &:hover
+      color: red;
+.online-pc
+  text-align: center;
+  .text
+    font-size: 90px;
+    text-align: center;
+    color: #6b6b6b;
+.mhs-text
+  font-size: 90px;
+  text-align: center;
+  color: #6b6b6b;
+  .mhs
+    font-size: 30px;
+    color: black;
 .current-info-outer
-  background-color: #cacaca;
-  border-bottom: 1px solid #ddd;
+  position: fixed
+  z-index: 1
+  background-color: #f1f1f1;
+  box-shadow: 0px 3px 31px -4px;
+  margin-bottom: 30px;
 .rig-info-outer
+  border-radius: 5px;
   .rig-info-inner
     color: white;
     box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
     background-color: white
     font-size: 19px;
     margin: 10px
-    padding: 5px;
+    padding: 10px 15px;
     color: black;
+    border-bottom: 3px solid
+  &.excellent
+    .rig-info-inner
+      border-color: #4fc54f;
     .eth-stat
-      &.excellent
-        color: #4fc54f
-      &.good
-        color: #bbad3a
-      &.bad
-        color: #ad1d1d
+      color: #4fc54f
+
+  &.good
+    .rig-info-inner
+      border-color: #bbad3a;
+    .eth-stat
+      color: #bbad3a
+  &.bad
+    .rig-info-inner
+      border-color: #ad1d1d;
+    .eth-stat
+      color: #ad1d1d
 </style>
