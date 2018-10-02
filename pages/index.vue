@@ -18,13 +18,12 @@
           div.rig-info-inner(v-if="rig")
             div.row
               div.col-md-2
-                strong {{rig.name}}
+                a(:href="`http://${rig.host}`" target="_blank")
+                  strong {{rig.name}}
               div.col-md-2.eth-stat(v-if="rig.eth === NaN" :class="checkClass(rigs[index].eth)" ) ANNEN
               div.col-md-2.eth-stat(v-if="rigs[index].eth !== NaN" :class="checkClass(rigs[index].eth)" ) {{rig.eth | hash}}
               div.col-md-2 {{rig.temps | temp}}'C
               div.col-md-3 {{rig.temps | fanSpeed}} %
-              //- div.col-md-1
-              //-   a(:href="`http://${rig.host}`" target="_blank") GIR
 
 </template>
 
