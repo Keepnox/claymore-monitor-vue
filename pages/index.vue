@@ -53,8 +53,6 @@ export default {
         }
         return value.substring(0,2)
       }
-      // return value.substring(0,3)
-      // return value
     },
     temp: function (value) {
       var newArr = value.split(';');
@@ -94,32 +92,29 @@ export default {
   },
   mounted: function () {
     var getHeaderHEIGHT = document.querySelector('.current-info-outer').offsetHeight
-    console.log(getHeaderHEIGHT)
-    console.log('selam')
     document.querySelector('.rig-render').style.marginTop = (getHeaderHEIGHT + 25 ) + 'px'
   },
-  methods: {
-    totalEth: function () {
+  watch: {
+    rigs: function (val) {
       let newArr = [];
-
-      this.rigs.filter(value => value).forEach(function (e) {
+      val.filter(value => value).forEach(function (e) {
           newArr.push(parseInt(e.eth))
       });
-
       var removeNan = newArr.filter( value => value)
-
       var totalVal = removeNan.reduce((a, b) => a + b);
+      console.log(totalVal)
+      var b = totalVal.toString();
+      var c = b.substring(0,4);
+      this.totalEthVal = c;
+    }
+  },
+  methods: {
+    // totalEth: function () {
 
-      var convString = totalVal.toLocaleString();
 
-      var beautyHash = convString.replace(',','')
-
-      this.totalEthVal = parseInt(beautyHash);
-
-    },
+    // },
     checkClass: function (eth) {
       var ethPretty = eth.split(';')[0];
-      // console.log(eth)
       if(ethPretty > 170000) {
         return 'excellent';
       } else if (ethPretty < 170000 && ethPretty > 155000) {
@@ -135,7 +130,7 @@ export default {
         .then(function (response) {
           self.rigs = response.data.miners;
           self.loadedData = true;
-          self.totalEth();
+          // self.totalEth();
         })
       },3000)
     },

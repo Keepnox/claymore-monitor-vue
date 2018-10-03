@@ -8,8 +8,7 @@
 export default {
   data() {
     return {
-      gaugeMhs: "",
-      // gaugeMhsSetter: {type: String}
+
     }
   },
   props: ['gaugeMhsSetter'],
