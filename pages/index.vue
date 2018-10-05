@@ -12,10 +12,7 @@
             div.col-md-4(style="text-align: center;")
               GaugeHash(:gaugeMhsSetter="totalEthVal || 0")
             div.col-md-4.online-pc
-              div.text
-                span 45
-                span /
-                span 45
+              OnlinePc(:rigs="rigs")
       div.row.rig-render
         div.col-md-4.rig-info-outer(:class="checkClass(rigs[index].eth)" v-for="(rig, index) in rigs")
           div.controller(v-if="!rig") YUKLENIYOR
@@ -33,6 +30,7 @@
 
 <script>
 import GaugeHash from '~/components/GaugeHash.vue'
+import OnlinePc from '~/components/OnlinePc.vue'
 import axios from'axios'
 
 export default {
@@ -88,7 +86,8 @@ export default {
     }
   },
   components: {
-    GaugeHash
+    GaugeHash,
+    OnlinePc
   },
   mounted: function () {
     var getHeaderHEIGHT = document.querySelector('.current-info-outer').offsetHeight
