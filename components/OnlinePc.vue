@@ -1,6 +1,6 @@
 <template lang="pug">
   div.row.rig-length-text
-    span {{totalRig - activeRig}}
+    span {{totalRig - deactiveRig}}
     span /
     span {{totalRig}}
 </template>
@@ -10,7 +10,7 @@ export default {
   data() {
     return {
       totalRig: "",
-      activeRig: "",
+      deactiveRig: "",
       selam: ""
     }
   },
@@ -28,7 +28,7 @@ export default {
         self.totalRig = a.length
         if(rig.eth === '') {
           b.push(rig)
-          self.activeRig = b.length
+          self.deactiveRig = b.length
         }
       });
       // console.log(newVal)

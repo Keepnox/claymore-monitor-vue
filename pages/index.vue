@@ -13,24 +13,25 @@
               GaugeHash(:gaugeMhsSetter="totalEthVal || 0")
             div.col-md-4.online-pc
               OnlinePc(:rigs="rigs")
-      div.row.rig-render
-        div.col-md-4.rig-info-outer(:class="checkClass(rigs[index].eth)" v-for="(rig, index) in rigs")
-          div.controller(v-if="!rig") YUKLENIYOR
-          div.rig-info-inner(v-if="rig")
-            div.row
-              div.col-md-3.rig-ip
-                a(:href="`http://${rig.host}`" target="_blank")
-                   strong {{rig.name}}
-              div.col-md-3.eth-stat(v-if="rig.eth === NaN" ) ANNEN
-              div.col-md-3.eth-stat(v-if="rigs[index].eth !== NaN" :class="checkClass(rigs[index].eth)" ) {{rig.eth | hash}}
-              div.col-md-2 {{rig.temps | temp}}'C
-              div.col-md-3 {{rig.temps | fanSpeed}} %
+      div.row.rig-render(v-if="!rigs") SELAM
+      div.row.rig-render(v-if="rigs")
+        RigList.col-md-4.rig-info-outer(
+          v-for="(rig, index) in rigs"
+          :key="index"
+          :name="rig.name"
+          :host="rig.host"
+          :eth="rig.eth"
+          :temps="rig.temps"
+        )
+
 
 </template>
+
 
 <script>
 import GaugeHash from '~/components/GaugeHash.vue'
 import OnlinePc from '~/components/OnlinePc.vue'
+import RigList from '~/components/RigList.vue'
 import axios from'axios'
 
 export default {
@@ -42,52 +43,10 @@ export default {
       totalEthVal: ""
     }
   },
-  filters: {
-    hash: function (value) {
-      if(value) {
-        var newVal = value.split(';')[0].length
-        if(newVal >= 6) {
-          return value.substring(0,3)
-        }
-        return value.substring(0,2)
-      }
-    },
-    temp: function (value) {
-      var newArr = value.split(';');
-      var tempr = [];
-      for (var i = 0; i < newArr.length; i++) {
-        if(i % 2 === 0) { // index is even
-          tempr.push(parseInt(newArr[i]));
-        }
-      }
-      var sum, avg = 0;
-      if (tempr.length)
-      {
-        sum = tempr.reduce(function(a, b) { return a + b; });
-        avg = sum / tempr.length;
-      }
-      return Math.round(avg);
-    },
-    fanSpeed: function (value) {
-      var newArr = value.split(';');
-      var tempr = [];
-      for (var i = 0; i < newArr.length; i++) {
-        if(i % 2 === 1) { // index is even
-          tempr.push(parseInt(newArr[i]));
-        }
-      }
-      var sum, avg = 0;
-      if (tempr.length)
-      {
-        sum = tempr.reduce(function(a, b) { return a + b; });
-        avg = sum / tempr.length;
-      }
-      return Math.round(avg);
-    }
-  },
   components: {
     GaugeHash,
-    OnlinePc
+    OnlinePc,
+    RigList
   },
   mounted: function () {
     var getHeaderHEIGHT = document.querySelector('.current-info-outer').offsetHeight
@@ -111,16 +70,7 @@ export default {
 
 
     // },
-    checkClass: function (eth) {
-      var ethPretty = eth.split(';')[0];
-      if(ethPretty > 170000) {
-        return 'excellent';
-      } else if (ethPretty < 170000 && ethPretty > 155000) {
-        return 'good';
-      } else {
-        return 'bad';
-      }
-    },
+
     intervalRequest: function () {
       var self = this;
       setInterval(function() {
@@ -167,31 +117,4 @@ body
   background-color: #f1f1f1;
   box-shadow: 0px 3px 31px -4px;
   margin-bottom: 30px;
-.rig-info-outer
-  border-radius: 5px;
-  .rig-info-inner
-    color: white;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
-    background-color: white
-    font-size: 19px;
-    margin: 10px
-    padding: 10px 15px;
-    color: black;
-    border-bottom: 3px solid
-  &.excellent
-    .rig-info-inner
-      border-color: #4fc54f;
-    .eth-stat
-      color: #4fc54f
-
-  &.good
-    .rig-info-inner
-      border-color: #bbad3a;
-    .eth-stat
-      color: #bbad3a
-  &.bad
-    .rig-info-inner
-      border-color: #ad1d1d;
-    .eth-stat
-      color: #ad1d1d
 </style>
