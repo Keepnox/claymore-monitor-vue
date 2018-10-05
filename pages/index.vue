@@ -102,7 +102,6 @@ export default {
       });
       var removeNan = newArr.filter( value => value)
       var totalVal = removeNan.reduce((a, b) => a + b);
-      console.log(totalVal)
       var b = totalVal.toString();
       var c = b.substring(0,4);
       this.totalEthVal = c;
