@@ -16,10 +16,13 @@ module.exports = {
       { hid: 'description', name: 'description', content: pkg.description }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: "stylesheet", href: "https://use.fontawesome.com/releases/v5.3.1/css/all.css", crossorigin: "anonymous" }
     ],
     script: [
       { src: 'http://bernii.github.io/gauge.js/dist/gauge.min.js' }
+
+
     ],
   },
 

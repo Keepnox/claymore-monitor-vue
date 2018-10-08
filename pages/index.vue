@@ -1,21 +1,22 @@
 <template lang='pug'>
   div.row
-    div.col-md-12(v-if="!rigs") YUKLENIYOR
-    div.col-md-12(v-if="rigs")
+    div.col-md-12(v-show="!loadedData")
+      Loaded
+    div.col-md-12(v-show="loadedData")
       div.row
-        div.col-md-12.current-info-outer
+        div.col-md-12.current-info-outer(v-bodyResizer)
           div.current-info-inner.row
             div.col-md-4.mhs-text
               div.text
-                span {{totalEthVal}}
+                span(v-if="loadedData") {{totalEthVal}}
                 span.mhs m/HS
             div.col-md-4(style="text-align: center;")
-              GaugeHash(:gaugeMhsSetter="totalEthVal || 0")
+              GaugeHash(v-if="loadedData" :gaugeMhsSetter="totalEthVal || 0")
             div.col-md-4.online-pc
-              OnlinePc(:rigs="rigs")
-      div.row.rig-render(v-if="!rigs") SELAM
-      div.row.rig-render(v-if="rigs")
+              OnlinePc(v-if="loadedData" :rigs="rigs")
+      div.row.rig-render
         RigList.col-md-4.rig-info-outer(
+          v-if="loadedData"
           v-for="(rig, index) in rigs"
           :key="index"
           :name="rig.name"
@@ -24,7 +25,6 @@
           :temps="rig.temps"
         )
 
-
 </template>
 
 
@@ -32,6 +32,7 @@
 import GaugeHash from '~/components/GaugeHash.vue'
 import OnlinePc from '~/components/OnlinePc.vue'
 import RigList from '~/components/RigList.vue'
+import Loaded from '~/components/Loaded.vue'
 import axios from'axios'
 
 export default {
@@ -43,14 +44,23 @@ export default {
       totalEthVal: ""
     }
   },
+  directives: {
+    bodyResizer: {
+      inserted: function (el) {
+        // setTimeout(() => {
+        //   document.querySelector('.rig-render').style.marginTop = (el.offsetHeight + 25 ) + 'px'
+        // }, 500)
+      }
+    }
+  },
   components: {
     GaugeHash,
     OnlinePc,
-    RigList
+    RigList,
+    Loaded
   },
   mounted: function () {
-    var getHeaderHEIGHT = document.querySelector('.current-info-outer').offsetHeight
-    document.querySelector('.rig-render').style.marginTop = (getHeaderHEIGHT + 25 ) + 'px'
+
   },
   watch: {
     rigs: function (val) {
@@ -66,21 +76,15 @@ export default {
     }
   },
   methods: {
-    // totalEth: function () {
-
-
-    // },
-
     intervalRequest: function () {
       var self = this;
       setInterval(function() {
-        axios.get('http://192.168.1.13:3000/rigs')
+        axios.get('http://192.168.1.12:3000/rigs')
         .then(function (response) {
           self.rigs = response.data.miners;
-          self.loadedData = true;
-          // self.totalEth();
+          self.loadedData = true
         })
-      },3000)
+      },5000)
     },
   },
   created: function () {
@@ -92,6 +96,9 @@ export default {
 <style lang="sass">
 body
   background-color: #e5e4e8
+.rig-render
+  transition: all .4s
+  margin-top: 180px
 .rig-ip
   a
     color: black
@@ -112,6 +119,7 @@ body
     font-size: 30px;
     color: black;
 .current-info-outer
+  height: 170px
   position: fixed
   z-index: 1
   background-color: #f1f1f1;
