@@ -19,6 +19,7 @@
           v-if="loadedData"
           v-for="(rig, index) in rigs"
           :key="index"
+          :ind="index"
           :name="rig.name"
           :host="rig.host"
           :eth="rig.eth"
@@ -60,7 +61,9 @@ export default {
     Loaded
   },
   mounted: function () {
-
+    setInterval(() => {
+      this.intervalRequest();
+    }, 2000)
   },
   watch: {
     rigs: function (val) {
@@ -76,20 +79,13 @@ export default {
     }
   },
   methods: {
-    intervalRequest: function () {
-      var self = this;
-      setInterval(function() {
-        axios.get('http://192.168.1.12:3000/rigs')
-        .then(function (response) {
-          self.rigs = response.data.miners;
-          self.loadedData = true
-        })
-      },5000)
+    intervalRequest: async function () {
+      let self = this;
+      let minerData = await axios.get('http://192.168.1.12:3000/rigs');
+      self.rigs = minerData.data.miners;
+      self.loadedData = true;
     },
   },
-  created: function () {
-    this.intervalRequest();
-  }
 }
 </script>
 

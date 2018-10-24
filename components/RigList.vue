@@ -1,27 +1,45 @@
 <template lang="pug">
   div.outer-beyb
     div.rig-info-inner.controller(v-if="!eth")
-      div.row
-          div.col-md-12.rig-ip YÜKLENİYOR YA DA KAPALI
-    div.rig-info-inner(:class="checkClass(eth)" v-if="eth")
-      div.row
+      v-btn.row(v-b-toggle="'collapse'+ind" variant="primary")
         div.col-md-3.rig-ip
           a(:href="`http://${host}`" target="_blank")
-             strong {{name}}
-        div.col-md-3.eth-stat(v-if="eth !== NaN" :class="checkClass(eth)" ) {{eth | hash}}
-        div.col-md-2 {{temps | temp}}'C
-        div.col-md-3 {{temps | fanSpeed}} %
+             strong(v-if="eth !== NaN") {{name}}
+        div.col-md-3.eth-stat(v-if="eth !== NaN" :class="checkClass(eth)" ) 0 Mh/s
+        div.col-md-3 0 'C
+        div.col-md-3 0 %
+      b-collapse(:id="`collapse${ind}`" class="mt-2")
+        b-card
+          p {{ind}}
+    div.rig-info-inner(:class="checkClass(eth)" v-if="eth")
+      v-btn.row(v-b-toggle="'collapse'+ind" variant="primary")
+        div.col-md-3.rig-ip
+          a(:href="host | urlRegex" target="_blank")
+             strong(v-if="eth !== NaN") {{name}}
+        div.col-md-3.eth-stat(v-if="eth !== NaN" :class="checkClass(eth)" ) {{eth | hash}} Mh/s
+        div.col-md-3 Temp: {{temps | temp}}'C
+        div.col-md-3 Fan: {{temps | fanSpeed}} %
+      b-collapse(:id="`collapse${ind}`" class="mt-2")
+        b-card
+           
 </template>
 
 <script>
 export default {
   data() {
     return {
-      propRigs:""
+      propRigs:"",
+      rigtest: []
     }
   },
-  props: ['host','name','temps','eth'],
+  props: ['host','name','temps','eth','ind'],
+  mounted() {
+    this.gpuInformation()
+  },
   methods: {
+    gpuInformation: function () {
+      var temp = this.temps
+    },
     checkClass: function (eth) {
       var ethPretty = eth.split(';')[0];
       if(ethPretty > 170000) {
@@ -34,6 +52,10 @@ export default {
     },
   },
   filters: {
+    urlRegex: function (value) {
+      let ipUrl = value.match(/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/g)
+      return 'http://' + ipUrl
+    },
     hash: function (value) {
       if(value) {
         var newVal = value.split(';')[0].length
@@ -95,6 +117,8 @@ export default {
       padding: 10px 15px;
       color: black;
       border-bottom: 3px solid
+      &.controller
+        background-color: #b2b2b2
     .excellent
       border-color: #4fc54f;
       .eth-stat

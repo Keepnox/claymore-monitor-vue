@@ -1,6 +1,7 @@
 <template lang="pug">
   div.container-fluid
-    nuxt
+    no-ssr
+      nuxt
 </template>
 
 <style>
