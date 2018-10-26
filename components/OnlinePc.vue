@@ -1,6 +1,6 @@
 <template lang="pug">
   div.row.rig-length-text
-    span {{totalRig - deactiveRig}}
+    span(class="online-rig-count" :class="deactiveRig == 0 ? 'good' : 'bad' ") {{totalRig - deactiveRig}}
     span /
     span {{totalRig}}
 </template>
@@ -20,21 +20,12 @@ export default {
   },
   watch: {
     rigs: function (newVal) {
-      var self = this;
-      var a = []
-      var b = []
-      newVal.forEach( function(rig, index) {
-        a.push(rig)
-        self.totalRig = a.length
-        if(rig.eth === '') {
-          b.push(rig)
-          self.deactiveRig = b.length
-        }
-      });
-      // console.log(newVal)
+      this.deactiveRig = document.querySelectorAll('.outer-beyb .controller').length;
+      this.totalRig = document.querySelectorAll('.outer-beyb').length
     }
   }
 }
+
 </script>
 
 <style lang="sass">
@@ -42,6 +33,16 @@ export default {
     font-size: 90px;
     text-align: center;
     color: #6b6b6b;
-    span:first-child
-      color: #df5766
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Fredericka the Great', cursive;
+    color: #00c09e;
+    .online-rig-count
+      &.good
+        color: #00c09e;
+      &.bad
+        color: #ff8180
 </style>
+

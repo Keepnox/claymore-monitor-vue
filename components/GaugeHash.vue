@@ -24,9 +24,9 @@ export default {
           color: '#000000'
         },
         staticZones: [
-           {strokeStyle: "#de4c58", min: 0, max: 3000},
-           {strokeStyle: "#f6c24b", min: 3000, max: 7000},
-           {strokeStyle: "#8dc95b", min: 7000, max: 8000},
+           {strokeStyle: "#ff7675", min: 0, max: 3000},
+           {strokeStyle: "#fdcb6e", min: 3000, max: 7000},
+           {strokeStyle: "#00b894", min: 7000, max: 8000},
         ],
         staticLabels: {
           font: "10px sans-serif",

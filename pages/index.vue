@@ -15,16 +15,20 @@
             div.col-md-4.online-pc
               OnlinePc(v-if="loadedData" :rigs="rigs")
       div.row.rig-render
-        RigList.col-md-4.rig-info-outer(
-          v-if="loadedData"
-          v-for="(rig, index) in rigs"
-          :key="index"
-          :ind="index"
-          :name="rig.name"
-          :host="rig.host"
-          :eth="rig.eth"
-          :temps="rig.temps"
-        )
+        div.col-md-4(v-for="(a, index) in 3")
+          .row
+            RigList.col-md-12.rig-info-outer(
+              v-if="rigIndex >= (rigs.length / 3) * index && rigIndex < (rigs.length / 3) * (index + 1)"
+              v-for="(rig, rigIndex) in rigs"
+              :key="rigIndex"
+              :ind="rigIndex"
+              :name="rig.name"
+              :host="rig.host"
+              :eth="rig.eth"
+              :temps="rig.temps"
+              :ethhr="rig.eth_hr"
+            )
+          
 
 </template>
 
@@ -81,7 +85,7 @@ export default {
   methods: {
     intervalRequest: async function () {
       let self = this;
-      let minerData = await axios.get('http://192.168.1.12:3000/rigs');
+      let minerData = await axios.get('/rigs');
       self.rigs = minerData.data.miners;
       self.loadedData = true;
     },
@@ -109,16 +113,23 @@ body
     color: #6b6b6b;
 .mhs-text
   font-size: 90px;
+  font-family: 'Fredericka the Great', cursive;
+  color: #00c09e;
   text-align: center;
-  color: #6b6b6b;
-  .mhs
-    font-size: 30px;
-    color: black;
+  .text
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    .mhs
+      font-size: 30px;
+      color: black;
 .current-info-outer
-  height: 170px
-  position: fixed
-  z-index: 1
-  background-color: #f1f1f1;
-  box-shadow: 0px 3px 31px -4px;
+  // height: 170px;
+  padding: 5px 0px;
+  position: fixed;
+  z-index: 1;
+  background-color: #ffffff;
+  box-shadow: 0px 3px 1px -4px;
   margin-bottom: 30px;
 </style>
