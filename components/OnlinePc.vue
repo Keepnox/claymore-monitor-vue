@@ -31,9 +31,9 @@ export default {
 
 <style lang="sass">
   .rig-length-text
+    color: #6b6b6b;
     @media (min-width: 768px)
       text-align: center;
-      color: #6b6b6b;
       position: absolute;
       left: 50%;
       top: 50%;

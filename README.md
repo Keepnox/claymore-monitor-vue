@@ -43,3 +43,11 @@ Example
 ## Run Project
 * After the installation and edited config.json file is run command `npm run dev`
 * Open Browser `http://localhost:3000` or `http://{this-pc-ip-address}:3000`
+
+
+## NOTE
+>>
+    If You This error is encount
+    `Cannot read property 'name' of null`
+    Please wait a few minutes and refresh browser page
+
