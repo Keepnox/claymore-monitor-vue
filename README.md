@@ -4,8 +4,6 @@ Demo : (http://panel.marsmining.xyz)
 
 ---
 
-
-PC Browser Example
 ![alt text][image]
 
 [image]: https://preview.ibb.co/iNszNf/Screen-Shot-2018-10-31-at-15-06-05.png "selam"
