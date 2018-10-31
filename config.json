@@ -1,5 +1,5 @@
 {
-    "title": "%HR% MH/s - Miner Monitor",
+    "title": "Keepnox - Miner Monitor",
     "header": "Miner Monitor",
     "miner_poll": 5000,
     "miner_timeout": 1000,

@@ -10,7 +10,7 @@
               div.text
                 span(v-if="loadedData") {{totalEthVal}}
                 span.mhs m/HS
-            div.col-md-4(style="text-align: center;")
+            div.col-md-4.d-none.d-sm-block.d-md-block.d-lg-block(style="text-align: center;")
               GaugeHash(v-if="loadedData" :gaugeMhsSetter="totalEthVal || 0")
             div.col-md-4.online-pc
               OnlinePc(v-if="loadedData" :rigs="rigs")
@@ -22,11 +22,12 @@
               v-for="(rig, rigIndex) in rigs"
               :key="rigIndex"
               :ind="rigIndex"
-              :name="rig.name"
+              :name="!rig.name ? 'nameyok':rig.name"
               :host="rig.host"
               :eth="rig.eth"
               :temps="rig.temps"
               :ethhr="rig.eth_hr"
+              :comment="rig.comments"
             )
           
 
@@ -67,7 +68,7 @@ export default {
   mounted: function () {
     setInterval(() => {
       this.intervalRequest();
-    }, 2000)
+    }, 3000)
   },
   watch: {
     rigs: function (val) {
@@ -112,15 +113,17 @@ body
     text-align: center;
     color: #6b6b6b;
 .mhs-text
-  font-size: 90px;
   font-family: 'Fredericka the Great', cursive;
   color: #00c09e;
   text-align: center;
   .text
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    font-size: 60px;
+    @media (min-width: 768px)
+      font-size: 90px;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
     .mhs
       font-size: 30px;
       color: black;

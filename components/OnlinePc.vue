@@ -1,8 +1,9 @@
 <template lang="pug">
   div.row.rig-length-text
-    span(class="online-rig-count" :class="deactiveRig == 0 ? 'good' : 'bad' ") {{totalRig - deactiveRig}}
-    span /
-    span {{totalRig}}
+    div.col-md-12
+      span(class="online-rig-count" :class="deactiveRig == 0 ? 'good' : 'bad' ") {{totalRig - deactiveRig}}
+      span /
+      span {{totalRig}}
 </template>
 
 <script>
@@ -30,13 +31,16 @@ export default {
 
 <style lang="sass">
   .rig-length-text
-    font-size: 90px;
-    text-align: center;
-    color: #6b6b6b;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    @media (min-width: 768px)
+      text-align: center;
+      color: #6b6b6b;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 90px
+    font-size: 45px
+    text-align: center
     font-family: 'Fredericka the Great', cursive;
     color: #00c09e;
     .online-rig-count

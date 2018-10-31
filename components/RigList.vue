@@ -2,17 +2,17 @@
   div.outer-beyb
     div.rig-info-inner.controller(v-if="!eth")
       v-btn.row(v-b-toggle="'collapse'+ind" variant="primary")
-        div.col-md-3.rig-ip
+        div.col-md-3.col-3.rig-ip
           a(:href="`http://${host}`" target="_blank")
             img(class="rig-icon" src="~/assets/icons/001-coding.png")
             span(v-if="eth !== NaN") {{name}}
-        div.col-md-3.eth-stat(v-if="eth !== NaN" ) 
+        div.col-md-3.col-3.eth-stat(v-if="eth !== NaN" ) 
           img(class="rig-icon" src="~/assets/icons/002-car.png")
           span 0
-        div.col-md-3 
+        div.col-md-3.col-3 
           img(class="rig-icon" src="~/assets/icons/004-thermometer.png")
           span 0'C
-        div.col-md-3
+        div.col-md-3.col-3
           img(class="rig-icon" src="~/assets/icons/003-fan.png")
           span 0 %
       b-collapse(:id="`collapse${ind}`" class="mt-2")
@@ -20,30 +20,38 @@
           p OFFLINE
     div.rig-info-inner(:class="checkClassEth(eth)" v-if="eth")
       v-btn.row(v-b-toggle="'collapse'+ind" variant="primary")
-        div.col-md-3.rig-ip
+        div.col-md-3.col-3.rig-ip
           a(:href="host | urlRegex" target="_blank")
              img(class="rig-icon" src="~/assets/icons/001-coding.png")
-             span(v-if="eth !== NaN") {{name}}
-        div.col-md-3.eth-stat(v-if="eth !== NaN" :class="checkClassEth(eth)" ) 
+             span(v-if="name") {{name}}
+        div.col-md-3.col-3.eth-stat(v-if="eth !== NaN" :class="checkClassEth(eth)" ) 
           img(class="rig-icon" src="~/assets/icons/002-car.png")
           span {{eth | hash}}
-        div.col-md-3(:class="checkClassTemp(temps)") 
+        div.col-md-3.col-3(:class="checkClassTemp(temps)") 
           img(class="rig-icon" src="~/assets/icons/004-thermometer.png")
           span {{temps | temp}}'C
-        div.col-md-3(:class="checkClassFanSpeed(temps)")
+        div.col-md-3.col-3(:class="checkClassFanSpeed(temps)")
           img(class="rig-icon" src="~/assets/icons/003-fan.png" )
           span {{temps | fanSpeed}} %
-      b-collapse(:id="`collapse${ind}`" class="mt-2")
-        .row
-          div.col-md-4.gpu-name RIG NAME
-            div.col-md-12(v-for="(h, index) in this.allCardMhs(this.ethhr)") GPU {{index + 1}}
-          div.col-md-4.gpu.hash HASH
-            div.col-md-12(v-for="h in this.allCardMhs(this.ethhr)") {{h / 1000}}
-          div.col-md-4.gpu.temp TEMP
-            div.col-md-12(v-for="g in allCardTemp(this.temps)") {{g[0]}}
-
-            
-           
+      b-collapse(:id="`collapse${ind}`" class="mt-2 clps-border")
+        .row.info-collapse
+          div.col-md-4.col-4.gpu-name 
+            span GPU 
+            div.col-md-12(class="mt-are" v-for="(h, index) in this.allCardMhs(this.ethhr)")  
+              img(class="gpu-icon d-none d-sm-inline d-md-inline d-lg-inline" src="~/assets/icons/graphic-card.png")
+              span {{index + 1}}
+          div.col-md-4.col-4.gpu.hash
+            span HASH
+            div.col-md-12(class="mt-are" class="gpu-single" :class="checkClassGpu(h)" v-for="h in this.allCardMhs(this.ethhr)") 
+              img(class="rig-icon d-none d-sm-inline d-md-inline d-lg-inline" src="~/assets/icons/002-car.png")
+              span {{h / 1000}}
+          div.col-md-4.col-4.gpu.temp 
+            span TEMP
+            div.col-md-12(class="mt-are" :class="checkClassTemp(g[0])" v-for="g in allCardTemp(this.temps)") 
+              img(class="gpu-icon d-none d-sm-inline d-md-inline d-lg-inline" src="~/assets/icons/004-thermometer.png")
+              span {{g[0]}}
+          div.col-md-12.note-area
+            p {{comment}}
 </template>
 
 <script>
@@ -55,12 +63,11 @@ export default {
       gpuTemp: [],
     };
   },
-  props: ["host", "name", "temps", "eth", "ind", "ethhr"],
+  props: ["host", "name", "temps", "eth", "ind", "ethhr","comment"],
   
   methods: {
     allCardMhs: function (gpuEth) {
       var g = gpuEth.split(";")
-      console.log('selam')
       return g
     },
     allCardTemp: function(gpuInfo) {
@@ -139,6 +146,15 @@ export default {
       } else {
         return "bad";
       }
+    },
+    checkClassGpu: function(gpuHash) {
+      if (gpuHash > 28000) {
+        return "excellent";
+      } else if (gpuHash < 28000 && gpuHash > 26000) {
+        return "good";
+      } else {
+        return "bad";
+      }
     }
   },
   filters: {
@@ -204,10 +220,38 @@ export default {
 <style lang="sass">
   @import url('https://fonts.googleapis.com/css?family=Amatic+SC|Chakra+Petch|Concert+One|Fredericka+the+Great|Montserrat|Open+Sans+Condensed:300|Poiret+One|Rajdhani|Raleway|Squada+One|Yanone+Kaffeesatz');
   .rig-info-outer
+    .note-area > p
+      background: white;
+      padding: 10px;
+      display: inline-block;
+      width: 80%;
+      margin-top: 17px;
+      font-size: 15px;
     border-radius: 5px
     cursor: pointer
     // user-select: none
     font-family: 'Squada One', cursive
+    .clps-border 
+      border: 1px solid #ececec;
+      border-radius: 9px;
+      background: #ececec;
+      padding: 15px 0px;
+    .info-collapse
+      text-align: center
+      .gpuHash, .gpu.name,
+      .gpu-single
+        &.excellent
+          color: #00b894
+        &.good
+          color: #fdcb6e
+        &.bad
+          color: #ff7675
+      .mt-are
+        margin-bottom: 5px
+      .gpu-icon
+        width: 28px;
+        height: 28px;
+        margin-right: 6px;
     .rig-ip
       a
         color: #9c9c9c

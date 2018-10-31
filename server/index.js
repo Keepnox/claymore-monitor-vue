@@ -12,7 +12,7 @@ const rigs = require('./rigs')
 const net = require('net')
 const fs = require('fs');
 const path = require("path");
-var minerConfig = require('./config.json');
+var minerConfig = require('../config.json');
 
 app.set('port', port)
 // Import and Set Nuxt.js options
@@ -213,12 +213,6 @@ minerConfig.miners.forEach(function (item, i, arr) {
         };
     }
 });
-
-
-
-
-
-
 
 
 async function start() {
