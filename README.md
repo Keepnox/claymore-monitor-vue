@@ -45,7 +45,7 @@ Example
 
 ## NOTE
 >>
-    If You This error is encount
+    If You encounter the following error
     `Cannot read property 'name' of null`
     Please wait a few minutes and refresh browser page
 
